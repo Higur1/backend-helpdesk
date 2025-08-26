@@ -1,12 +1,12 @@
-package io.github.higur.helpdesk.domain;
+package io.github.higur.helpdesk.domain.enums;
 
-public enum Profile {
-    ADMIN(0, "ROLE_ADMIN"), CLIENT(1, "ROLE_CLEINT"), TECHNICAL(2, "ROLE_TECHINCAL");
+public enum Status {
+    OPEN(0, "OPEN"), PROCEEDING(1, "PROCEEDING"), CLOSED(2, "CLOSED");
 
     private Integer code;
     private String description;
 
-    Profile(Integer code, String description) {
+    Status(Integer code, String description) {
         this.code = code;
         this.description = description;
     }
@@ -19,15 +19,15 @@ public enum Profile {
         return description;
     }
 
-    public static Profile toEnum(Integer code){
+    public static Status toEnum(Integer code){
         if(code == null){
             return null;
         }
-        for(Profile x: Profile.values()){
+        for(Status x: Status.values()){
             if(code.equals(x.getCode())){
                 return x;
             }
         }
-        throw new IllegalArgumentException("Invalid profile");
+        throw new IllegalArgumentException("Invalid status");
     }
 }

@@ -1,12 +1,12 @@
-package io.github.higur.helpdesk.domain;
+package io.github.higur.helpdesk.domain.enums;
 
-public enum Status {
-    OPEN(0, "OPEN"), PROCEEDING(1, "PROCEEDING"), CLOSED(2, "CLOSED");
+public enum Priority {
+    LOW(0, "LOW"), MEDIUM(1, "MEDIUM"), HIGH(2, "HIGH");
 
     private Integer code;
     private String description;
 
-    Status(Integer code, String description) {
+    Priority(Integer code, String description) {
         this.code = code;
         this.description = description;
     }
@@ -19,15 +19,15 @@ public enum Status {
         return description;
     }
 
-    public static Status toEnum(Integer code){
+    public static Priority toEnum(Integer code){
         if(code == null){
             return null;
         }
-        for(Status x: Status.values()){
+        for(Priority x: Priority.values()){
             if(code.equals(x.getCode())){
                 return x;
             }
         }
-        throw new IllegalArgumentException("Invalid status");
+        throw new IllegalArgumentException("Invalid priority");
     }
 }

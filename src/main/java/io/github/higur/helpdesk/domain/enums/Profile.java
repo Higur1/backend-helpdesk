@@ -1,12 +1,12 @@
-package io.github.higur.helpdesk.domain;
+package io.github.higur.helpdesk.domain.enums;
 
-public enum Priority {
-    LOW(0, "LOW"), MEDIUM(1, "MEDIUM"), HIGH(2, "HIGH");
+public enum Profile {
+    ADMIN(0, "ROLE_ADMIN"), CLIENT(1, "ROLE_CLEINT"), TECHNICAL(2, "ROLE_TECHINCAL");
 
     private Integer code;
     private String description;
 
-    Priority(Integer code, String description) {
+    Profile(Integer code, String description) {
         this.code = code;
         this.description = description;
     }
@@ -19,15 +19,15 @@ public enum Priority {
         return description;
     }
 
-    public static Priority toEnum(Integer code){
+    public static Profile toEnum(Integer code){
         if(code == null){
             return null;
         }
-        for(Priority x: Priority.values()){
+        for(Profile x: Profile.values()){
             if(code.equals(x.getCode())){
                 return x;
             }
         }
-        throw new IllegalArgumentException("Invalid priority");
+        throw new IllegalArgumentException("Invalid profile");
     }
 }
