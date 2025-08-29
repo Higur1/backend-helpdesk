@@ -18,12 +18,12 @@ public class Customer extends Person{
 
     public Customer() {
         super();
-        addProfile(Profile.CLIENT);
+        addProfile(Profile.CUSTOMER);
     }
 
     public Customer(Integer id, String name, String cpf, String email, String password) {
         super(id, name, cpf, email, password);
-        addProfile(Profile.CLIENT);
+        addProfile(Profile.CUSTOMER);
     }
 
     public List<Ticket> getTickets() {

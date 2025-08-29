@@ -1,5 +1,6 @@
 package io.github.higur.helpdesk.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.higur.helpdesk.domain.enums.Profile;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -13,6 +14,7 @@ public class Technician extends Person {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "technician")
     private List<Ticket> tickets = new ArrayList<>();
 

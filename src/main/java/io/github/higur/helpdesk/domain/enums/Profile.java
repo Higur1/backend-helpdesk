@@ -1,7 +1,7 @@
 package io.github.higur.helpdesk.domain.enums;
 
 public enum Profile {
-    ADMIN(0, "ROLE_ADMIN"), CLIENT(1, "ROLE_CLIENT"), TECHNICIAN(2, "ROLE_TECHNICIAN");
+    ADMIN(0, "ROLE_ADMIN"), CUSTOMER(1, "ROLE_CUSTOMER"), TECHNICIAN(2, "ROLE_TECHNICIAN");
 
     private Integer code;
     private String description;
