@@ -1,6 +1,7 @@
 package io.github.higur.helpdesk.resources;
 
 import io.github.higur.helpdesk.domain.Technician;
+import io.github.higur.helpdesk.domain.dtos.TechnicianDTO;
 import io.github.higur.helpdesk.service.TechnicianService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ public class TechnicianResources {
     private TechnicianService technicianService;
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Technician> findById(@PathVariable Integer id){
-        return ResponseEntity.ok().body(technicianService.find(id));
+    public ResponseEntity<TechnicianDTO> findById(@PathVariable Integer id){
+        return ResponseEntity.ok().body(new TechnicianDTO(technicianService.find(id)));
     }
 }
