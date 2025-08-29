@@ -2,6 +2,7 @@ package io.github.higur.helpdesk.service;
 
 import io.github.higur.helpdesk.domain.Technician;
 import io.github.higur.helpdesk.repository.TechnicianRepository;
+import io.github.higur.helpdesk.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,6 @@ public class TechnicianService {
 
     public Technician find(Integer id){
         Optional<Technician> obj = technicianRepository.findById(id);
-        return obj.orElse(null);
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Object Not Found!"));
     }
 }
