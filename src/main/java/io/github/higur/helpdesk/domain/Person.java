@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Person implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

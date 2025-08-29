@@ -26,13 +26,18 @@ public class DBService {
     private TicketRepository ticketRepository;
 
     public void dbStart() {
-        Technician tech1 = new Technician(null, "Higor", "606.884.650-48", "higor@mail.com", "123");
-        tech1.addProfile(Profile.ADMIN);
-        Customer cust1 = new Customer(null, "Linus Torvalds", "928.742.460-85", "torvalds@mail.com", "123");
-        Ticket tick1 = new Ticket(null, Status.OPEN, "ticket 01", "first ticket", tech1, cust1, Priority.MEDIUM);
+        try {
+            Technician tech1 = new Technician(null, "Higor", "606.884.650-48", "higor@mail.com", "123");
+            tech1.addProfile(Profile.ADMIN);
+            Customer cust1 = new Customer(null, "Linus Torvalds", "928.742.460-85", "torvalds@mail.com", "123");
+            Ticket tick1 = new Ticket(null, Status.OPEN, "ticket 01", "first ticket", tech1, cust1, Priority.MEDIUM);
 
-        technicianRepository.saveAll(List.of(tech1));
-        customerRepository.saveAll(List.of(cust1));
-        ticketRepository.saveAll(List.of(tick1));
+            technicianRepository.saveAll(List.of(tech1));
+            customerRepository.saveAll(List.of(cust1));
+            ticketRepository.saveAll(List.of(tick1));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
