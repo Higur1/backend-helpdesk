@@ -51,6 +51,14 @@ public abstract class Person implements Serializable {
         addProfile(Profile.CUSTOMER);
     }
 
+    public Person(String name, String cpf, String email, String password) {
+        this.name = name;
+        this.cpf = cpf;
+        this.email = email;
+        this.password = password;
+        addProfile(Profile.CUSTOMER);
+    }
+
     public Integer getId() {
         return id;
     }

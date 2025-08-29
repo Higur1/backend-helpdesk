@@ -27,6 +27,10 @@ public class Technician extends Person {
         super(id, name, cpf, email, password);
         addProfile(Profile.TECHNICIAN);
     }
+    public Technician( String name, String cpf, String email, String password) {
+        super(name, cpf, email, password);
+        addProfile(Profile.TECHNICIAN);
+    }
 
     public List<Ticket> getTickets() {
         return tickets;

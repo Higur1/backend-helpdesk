@@ -4,35 +4,33 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.higur.helpdesk.domain.Technician;
 import io.github.higur.helpdesk.domain.enums.Profile;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TechnicianDTO implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+public class TechnicianRequestDTO {
     protected String name;
     protected String cpf;
     protected String email;
     protected String password;
 
-    protected Set<Integer> profiles;
+    protected Set<Profile> profiles;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "MM/dd/yyyy")
     protected LocalDate createdAt;
 
-    public TechnicianDTO() {
+    public TechnicianRequestDTO() {
         super();
     }
 
-    public TechnicianDTO(Technician obj) {
-        this.name = obj.getName();
-        this.cpf = obj.getCpf();
-        this.email = obj.getEmail();
-        this.password = obj.getPassword();
-        this.profiles = obj.getProfiles().stream().map(x -> x.getCode()).collect(Collectors.toSet());
-        this.createdAt = obj.getCreatedAt();
+    public Technician TechnicianRequestDTO(TechnicianRequestDTO technicianRequestDTO) {
+        return new Technician(
+                null,
+                technicianRequestDTO.name,
+                technicianRequestDTO.cpf,
+                technicianRequestDTO.email,
+                technicianRequestDTO.password
+        );
     }
 
     public String getName() {
@@ -67,12 +65,12 @@ public class TechnicianDTO implements Serializable {
         this.password = password;
     }
 
-    public Set<Profile> getProfiles() {
-        return profiles.stream().map(x -> Profile.toEnum(x)).collect(Collectors.toSet());
+    public Set<Integer> getProfiles() {
+        return profiles.stream().map(x -> x.getCode()).collect(Collectors.toSet());
     }
 
     public void addProfile(Profile profile) {
-        this.profiles.add(profile.getCode());
+        this.profiles.add(profile);
     }
 
     public LocalDate getCreatedAt() {
