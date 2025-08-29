@@ -39,7 +39,6 @@ public abstract class Person implements Serializable {
 
     public Person() {
         super();
-        addProfile(Profile.CUSTOMER);
     }
 
     public Person(Integer id, String name, String cpf, String email, String password) {
@@ -48,7 +47,6 @@ public abstract class Person implements Serializable {
         this.cpf = cpf;
         this.email = email;
         this.password = password;
-        addProfile(Profile.CUSTOMER);
     }
 
     public Person(String name, String cpf, String email, String password) {
@@ -56,7 +54,6 @@ public abstract class Person implements Serializable {
         this.cpf = cpf;
         this.email = email;
         this.password = password;
-        addProfile(Profile.CUSTOMER);
     }
 
     public Integer getId() {
@@ -100,11 +97,19 @@ public abstract class Person implements Serializable {
     }
 
     public Set<Profile> getProfiles() {
-        return profiles.stream().map(x -> Profile.toEnum(x)).collect(Collectors.toSet());
+        return profiles.stream().map(Profile::toEnum).collect(Collectors.toSet());
+    }
+
+    public Set<Integer> getProfilesCode() {
+        return profiles;
     }
 
     public void addProfile(Profile profile) {
         this.profiles.add(profile.getCode());
+    }
+
+    public void addProfile(Integer profileCode) {
+        this.profiles.add(profileCode);
     }
 
     public LocalDate getCreatedAt() {

@@ -1,13 +1,12 @@
 package io.github.higur.helpdesk.resources;
 
+import io.github.higur.helpdesk.domain.dtos.TechnicianRequestDTO;
 import io.github.higur.helpdesk.domain.dtos.TechnicianResponseDTO;
 import io.github.higur.helpdesk.service.TechnicianService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 
@@ -26,5 +25,14 @@ public class TechnicianResources {
     @GetMapping
     public ResponseEntity<List<TechnicianResponseDTO>> findAll() {
         return ResponseEntity.ok().body(technicianService.findAll());
+    }
+
+    @PostMapping
+    public ResponseEntity<TechnicianResponseDTO> save(@RequestBody TechnicianRequestDTO technicianRequestDTO) {
+        return ResponseEntity.created(
+                        ServletUriComponentsBuilder
+                                .fromCurrentRequest()
+                                .path("/{id}")
+                                .buildAndExpand(technicianService.save(technicianRequestDTO).getId()).toUri()).build();
     }
 }

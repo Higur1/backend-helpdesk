@@ -1,10 +1,10 @@
 package io.github.higur.helpdesk.domain.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.higur.helpdesk.domain.Technician;
 import io.github.higur.helpdesk.domain.enums.Profile;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,23 +14,13 @@ public class TechnicianRequestDTO {
     protected String email;
     protected String password;
 
-    protected Set<Profile> profiles;
+    protected Set<Profile> profiles = new HashSet<>();
 
     @JsonFormat(pattern = "MM/dd/yyyy")
     protected LocalDate createdAt;
 
     public TechnicianRequestDTO() {
         super();
-    }
-
-    public Technician TechnicianRequestDTO(TechnicianRequestDTO technicianRequestDTO) {
-        return new Technician(
-                null,
-                technicianRequestDTO.name,
-                technicianRequestDTO.cpf,
-                technicianRequestDTO.email,
-                technicianRequestDTO.password
-        );
     }
 
     public String getName() {

@@ -6,7 +6,6 @@ import io.github.higur.helpdesk.domain.enums.Profile;
 
 import java.time.LocalDate;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class TechnicianResponseDTO {
 
@@ -16,7 +15,7 @@ public class TechnicianResponseDTO {
     protected String email;
     protected String password;
 
-    protected Set<Integer> profiles;
+    protected Set<Profile> profiles;
 
     @JsonFormat(pattern = "MM/dd/yyyy")
     protected LocalDate createdAt;
@@ -30,9 +29,17 @@ public class TechnicianResponseDTO {
         this.name = obj.getName();
         this.cpf = obj.getCpf();
         this.email = obj.getEmail();
-        this.password = obj.getPassword();
-        this.profiles = obj.getProfiles().stream().map(x -> x.getCode()).collect(Collectors.toSet());
+        this.profiles = obj.getProfiles();
         this.createdAt = obj.getCreatedAt();
+    }
+
+    public TechnicianResponseDTO(Integer id, String name, String cpf, String email, Set<Profile> profiles, LocalDate createdAt) {
+        this.id = id;
+        this.name = name;
+        this.cpf = cpf;
+        this.email = email;
+        this.profiles = profiles;
+        this.createdAt = createdAt;
     }
 
     public Integer getId() {
@@ -67,20 +74,12 @@ public class TechnicianResponseDTO {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public Set<Profile> getProfiles() {
-        return profiles.stream().map(x -> Profile.toEnum(x)).collect(Collectors.toSet());
+        return profiles;
     }
 
     public void addProfile(Profile profile) {
-        this.profiles.add(profile.getCode());
+        this.profiles.add(profile);
     }
 
     public LocalDate getCreatedAt() {

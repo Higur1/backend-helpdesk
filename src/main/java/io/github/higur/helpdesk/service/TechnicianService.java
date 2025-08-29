@@ -1,6 +1,8 @@
 package io.github.higur.helpdesk.service;
 
+import io.github.higur.helpdesk.domain.dtos.TechnicianRequestDTO;
 import io.github.higur.helpdesk.domain.dtos.TechnicianResponseDTO;
+import io.github.higur.helpdesk.domain.mapping.TechnicianMapper;
 import io.github.higur.helpdesk.repository.TechnicianRepository;
 import io.github.higur.helpdesk.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ public class TechnicianService {
     @Autowired
     private TechnicianRepository technicianRepository;
 
+    @Autowired
+    private TechnicianMapper mapper;
+
     public TechnicianResponseDTO find(Integer id) {
         return new TechnicianResponseDTO(
                 technicianRepository.findById(id)
@@ -25,7 +30,11 @@ public class TechnicianService {
         return technicianRepository
                 .findAll()
                 .stream()
-                .map(TechnicianResponseDTO::new)
+                .map(mapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public TechnicianResponseDTO save(TechnicianRequestDTO technicianRequestDTO) {
+        return mapper.toDTO(technicianRepository.save(mapper.toEntity(technicianRequestDTO)));
     }
 }

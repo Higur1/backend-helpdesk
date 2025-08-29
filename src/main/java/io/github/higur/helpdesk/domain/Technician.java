@@ -8,6 +8,7 @@ import jakarta.persistence.OneToMany;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Technician extends Person {
@@ -27,9 +28,19 @@ public class Technician extends Person {
         super(id, name, cpf, email, password);
         addProfile(Profile.TECHNICIAN);
     }
-    public Technician( String name, String cpf, String email, String password) {
+
+    public Technician(String name, String cpf, String email, String password) {
         super(name, cpf, email, password);
         addProfile(Profile.TECHNICIAN);
+    }
+
+    public Technician(String name, String cpf, String email, String password, Set<Integer> profiles) {
+        super(name, cpf, email, password);
+
+        if (!profiles.contains(Profile.TECHNICIAN.getCode())) {
+            addProfile(Profile.TECHNICIAN);
+        }
+        profiles.forEach(this::addProfile);
     }
 
     public List<Ticket> getTickets() {
