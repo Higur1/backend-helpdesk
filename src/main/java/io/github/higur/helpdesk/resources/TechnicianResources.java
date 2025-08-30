@@ -30,11 +30,12 @@ public class TechnicianResources {
 
     @PostMapping
     public ResponseEntity<TechnicianResponseDTO> save(@Valid @RequestBody TechnicianRequestDTO technicianRequestDTO) {
+        TechnicianResponseDTO save = technicianService.save(technicianRequestDTO);
         return ResponseEntity.created(
                 ServletUriComponentsBuilder
                         .fromCurrentRequest()
                         .path("/{id}")
-                        .buildAndExpand(technicianService.save(technicianRequestDTO).getId()).toUri()).build();
+                        .buildAndExpand(save.getId()).toUri()).body(save);
     }
 
     @PutMapping(value = "/{id}")
