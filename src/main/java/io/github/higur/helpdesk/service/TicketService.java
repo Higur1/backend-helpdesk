@@ -40,9 +40,21 @@ public class TicketService {
     }
 
     public TicketResponseDTO save(TicketRequestDTO ticketRequestDTO) {
+        return mapper.toDto(ticketRepository.save((searchCustomerAndTechnician(ticketRequestDTO))));
+    }
+
+    public TicketResponseDTO update(Integer id, TicketRequestDTO ticketRequestDTO) {
+        Ticket ticketById = ticketRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Ticket Not Found"));
+        Ticket ticket = searchCustomerAndTechnician(ticketRequestDTO);
+        ticket.setId(ticketById.getId());
+
+        return mapper.toDto(ticketRepository.save(ticket));
+    }
+
+    private Ticket searchCustomerAndTechnician(TicketRequestDTO ticketRequestDTO) {
         Customer customerById = customerRepository.findById(ticketRequestDTO.getCustomerId()).orElseThrow(() -> new ObjectNotFoundException("Customer Not Found"));
         Technician technicianById = technicianRepository.findById(ticketRequestDTO.getTechnicianId()).orElseThrow(() -> new ObjectNotFoundException("Technician Not Found"));
 
-        return mapper.toDto(ticketRepository.save(mapper.toEntity(ticketRequestDTO, customerById, technicianById)));
+        return mapper.toEntity(ticketRequestDTO, customerById, technicianById);
     }
 }

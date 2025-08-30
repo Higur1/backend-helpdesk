@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tickets")
-public class TickerResources {
+public class TicketResources {
 
     @Autowired
     private TicketService ticketService;
@@ -30,10 +30,16 @@ public class TickerResources {
 
     @PostMapping
     public ResponseEntity<TicketResponseDTO> save(@Valid @RequestBody TicketRequestDTO ticketRequestDTO) {
+        TicketResponseDTO save = ticketService.save(ticketRequestDTO);
         return ResponseEntity.created(
                 ServletUriComponentsBuilder
                         .fromCurrentRequest()
                         .path("/{id}")
-                        .buildAndExpand(ticketService.save(ticketRequestDTO).getId()).toUri()).build();
+                        .buildAndExpand(save.getId()).toUri()).body(save);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TicketResponseDTO> update(@PathVariable Integer id, @Valid @RequestBody TicketRequestDTO ticketRequestDTO) {
+        return ResponseEntity.ok().body(ticketService.update(id, ticketRequestDTO));
     }
 }
