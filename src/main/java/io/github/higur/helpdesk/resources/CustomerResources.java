@@ -30,7 +30,8 @@ public class CustomerResources {
 
     @PostMapping
     public ResponseEntity<CustomerResponseDTO> save(@Valid @RequestBody CustomerRequestDTO customerRequestDTO) {
-        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(customerService.save(customerRequestDTO).getId()).toUri()).build();
+        CustomerResponseDTO save = customerService.save(customerRequestDTO);
+        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(save.getId()).toUri()).body(save);
     }
 
     @PutMapping("/{id}")
