@@ -2,6 +2,10 @@ package io.github.higur.helpdesk.domain.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.higur.helpdesk.domain.enums.Profile;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -9,9 +13,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TechnicianRequestDTO {
+
+    @NotBlank(message = "name is required")
     protected String name;
+    @NotBlank(message = "cpf is required")
+    @CPF(message = "Invalid CPF")
     protected String cpf;
+    @NotBlank(message = "email is required")
+    @Email(message = "Invalid Email")
     protected String email;
+    @NotBlank(message = "password is required")
     protected String password;
 
     protected Set<Profile> profiles = new HashSet<>();

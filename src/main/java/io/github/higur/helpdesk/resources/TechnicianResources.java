@@ -3,6 +3,7 @@ package io.github.higur.helpdesk.resources;
 import io.github.higur.helpdesk.domain.dtos.TechnicianRequestDTO;
 import io.github.higur.helpdesk.domain.dtos.TechnicianResponseDTO;
 import io.github.higur.helpdesk.service.TechnicianService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class TechnicianResources {
     }
 
     @PostMapping
-    public ResponseEntity<TechnicianResponseDTO> save(@RequestBody TechnicianRequestDTO technicianRequestDTO) {
+    public ResponseEntity<TechnicianResponseDTO> save(@Valid @RequestBody TechnicianRequestDTO technicianRequestDTO) {
         return ResponseEntity.created(
                         ServletUriComponentsBuilder
                                 .fromCurrentRequest()

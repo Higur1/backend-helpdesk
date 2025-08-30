@@ -7,6 +7,7 @@ import io.github.higur.helpdesk.domain.validator.TechnicianValidator;
 import io.github.higur.helpdesk.repository.TechnicianRepository;
 import io.github.higur.helpdesk.service.exceptions.DataIntegrityViolationException;
 import io.github.higur.helpdesk.service.exceptions.ObjectNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
