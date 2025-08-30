@@ -1,13 +1,13 @@
-package io.github.higur.helpdesk.domain.dtos.technicianDTO;
+package io.github.higur.helpdesk.domain.dtos.customerDTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.higur.helpdesk.domain.Technician;
+import io.github.higur.helpdesk.domain.Customer;
 import io.github.higur.helpdesk.domain.enums.Profile;
 
 import java.time.LocalDate;
 import java.util.Set;
 
-public class TechnicianResponseDTO {
+public class CustomerResponseDTO {
 
     protected Integer id;
     protected String name;
@@ -20,11 +20,11 @@ public class TechnicianResponseDTO {
     @JsonFormat(pattern = "MM/dd/yyyy")
     protected LocalDate createdAt;
 
-    public TechnicianResponseDTO() {
+    public CustomerResponseDTO() {
         super();
     }
 
-    public TechnicianResponseDTO(Technician obj) {
+    public CustomerResponseDTO(Customer obj) {
         this.id = obj.getId();
         this.name = obj.getName();
         this.cpf = obj.getCpf();
@@ -33,7 +33,7 @@ public class TechnicianResponseDTO {
         this.createdAt = obj.getCreatedAt();
     }
 
-    public TechnicianResponseDTO(Integer id, String name, String cpf, String email, Set<Profile> profiles, LocalDate createdAt) {
+    public CustomerResponseDTO(Integer id, String name, String cpf, String email, Set<Profile> profiles, LocalDate createdAt) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;

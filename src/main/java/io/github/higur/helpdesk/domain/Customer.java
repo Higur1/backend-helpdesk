@@ -8,9 +8,10 @@ import jakarta.persistence.OneToMany;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-public class Customer extends Person{
+public class Customer extends Person {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -26,6 +27,19 @@ public class Customer extends Person{
     public Customer(Integer id, String name, String cpf, String email, String password) {
         super(id, name, cpf, email, password);
         addProfile(Profile.CUSTOMER);
+    }
+
+    public Customer(String name, String cpf, String email, String password) {
+        super(name, cpf, email, password);
+        addProfile(Profile.CUSTOMER);
+    }
+
+    public Customer(String name, String cpf, String email, String password, Set<Integer> profiles) {
+        super(name, cpf, email, password);
+        if (!profiles.contains(Profile.CUSTOMER.getCode())) {
+            addProfile(Profile.CUSTOMER);
+        }
+        profiles.forEach(this::addProfile);
     }
 
     public List<Ticket> getTickets() {
