@@ -1,11 +1,10 @@
 package io.github.higur.helpdesk.resources;
 
-import io.github.higur.helpdesk.domain.dtos.TechnicianRequestDTO;
-import io.github.higur.helpdesk.domain.dtos.TechnicianResponseDTO;
+import io.github.higur.helpdesk.domain.dtos.technicianDTO.TechnicianRequestDTO;
+import io.github.higur.helpdesk.domain.dtos.technicianDTO.TechnicianResponseDTO;
 import io.github.higur.helpdesk.service.TechnicianService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -32,13 +31,20 @@ public class TechnicianResources {
     @PostMapping
     public ResponseEntity<TechnicianResponseDTO> save(@Valid @RequestBody TechnicianRequestDTO technicianRequestDTO) {
         return ResponseEntity.created(
-                        ServletUriComponentsBuilder
-                                .fromCurrentRequest()
-                                .path("/{id}")
-                                .buildAndExpand(technicianService.save(technicianRequestDTO).getId()).toUri()).build();
+                ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .path("/{id}")
+                        .buildAndExpand(technicianService.save(technicianRequestDTO).getId()).toUri()).build();
     }
+
     @PutMapping(value = "/{id}")
-    public ResponseEntity<TechnicianResponseDTO> update(@PathVariable Integer id, @Valid @RequestBody TechnicianRequestDTO technicianRequestDTO){
+    public ResponseEntity<TechnicianResponseDTO> update(@PathVariable Integer id, @Valid @RequestBody TechnicianRequestDTO technicianRequestDTO) {
         return ResponseEntity.ok().body(technicianService.update(id, technicianRequestDTO));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        technicianService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,4 +1,4 @@
-package io.github.higur.helpdesk.domain.dtos;
+package io.github.higur.helpdesk.domain.dtos.technicianDTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.higur.helpdesk.domain.Technician;

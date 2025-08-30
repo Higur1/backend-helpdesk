@@ -1,8 +1,8 @@
 package io.github.higur.helpdesk.domain.mapping;
 
 import io.github.higur.helpdesk.domain.Technician;
-import io.github.higur.helpdesk.domain.dtos.TechnicianRequestDTO;
-import io.github.higur.helpdesk.domain.dtos.TechnicianResponseDTO;
+import io.github.higur.helpdesk.domain.dtos.technicianDTO.TechnicianRequestDTO;
+import io.github.higur.helpdesk.domain.dtos.technicianDTO.TechnicianResponseDTO;
 import org.springframework.stereotype.Component;
 
 @Component

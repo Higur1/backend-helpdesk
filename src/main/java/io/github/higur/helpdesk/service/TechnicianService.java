@@ -1,14 +1,13 @@
 package io.github.higur.helpdesk.service;
 
 import io.github.higur.helpdesk.domain.Technician;
-import io.github.higur.helpdesk.domain.dtos.TechnicianRequestDTO;
-import io.github.higur.helpdesk.domain.dtos.TechnicianResponseDTO;
+import io.github.higur.helpdesk.domain.dtos.technicianDTO.TechnicianRequestDTO;
+import io.github.higur.helpdesk.domain.dtos.technicianDTO.TechnicianResponseDTO;
 import io.github.higur.helpdesk.domain.mapping.TechnicianMapper;
 import io.github.higur.helpdesk.domain.validator.TechnicianValidator;
 import io.github.higur.helpdesk.repository.TechnicianRepository;
 import io.github.higur.helpdesk.service.exceptions.DataIntegrityViolationException;
 import io.github.higur.helpdesk.service.exceptions.ObjectNotFoundException;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,23 +44,31 @@ public class TechnicianService {
 
     public TechnicianResponseDTO save(TechnicianRequestDTO technicianRequestDTO) {
         Technician technician = mapper.toEntity(technicianRequestDTO);
-        List<String> conflicts =  collectConflicts(technician);
+        List<String> conflicts = collectConflicts(technician);
         if (!conflicts.isEmpty()) {
             throw new DataIntegrityViolationException("Already exists: " + String.join(" and ", conflicts));
         }
         return mapper.toDTO(technicianRepository.save(technician));
     }
 
-    public TechnicianResponseDTO update(Integer id, TechnicianRequestDTO technicianRequestDTO){
+    public TechnicianResponseDTO update(Integer id, TechnicianRequestDTO technicianRequestDTO) {
         Technician technician = mapper.toEntity(technicianRequestDTO);
         technician.setId(id);
 
-        List<String> conflicts =  collectConflicts(technician);
+        List<String> conflicts = collectConflicts(technician);
         if (!conflicts.isEmpty()) {
             throw new DataIntegrityViolationException("Already exists: " + String.join(" and ", conflicts));
         }
 
         return mapper.toDTO(technicianRepository.save(technician));
+    }
+
+    public void delete(Integer id) {
+        Technician technician = technicianRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Object Not Found"));
+        if (validator.haveATicketOpenOrProceeding(technician)){
+            throw new DataIntegrityViolationException("Is not possible delete technician with tickets OPEN or PROCEEDING");
+        }
+        technicianRepository.delete(technician);
     }
 
     private List<String> collectConflicts(Technician technician) {
@@ -69,6 +76,8 @@ public class TechnicianService {
                 validator.cpfExists(technician) ? "CPF" : null,
                 validator.emailExists(technician) ? "EMAIL" : null
         ).filter(Objects::nonNull).toList();
-    };
+    }
+
+    ;
 }
 
