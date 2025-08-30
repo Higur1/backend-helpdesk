@@ -1,5 +1,6 @@
 package io.github.higur.helpdesk.service;
 
+import io.github.higur.helpdesk.domain.Technician;
 import io.github.higur.helpdesk.domain.dtos.TechnicianRequestDTO;
 import io.github.higur.helpdesk.domain.dtos.TechnicianResponseDTO;
 import io.github.higur.helpdesk.domain.mapping.TechnicianMapper;
@@ -43,19 +44,31 @@ public class TechnicianService {
     }
 
     public TechnicianResponseDTO save(TechnicianRequestDTO technicianRequestDTO) {
-        List<String> conflicts =  collectConflicts(technicianRequestDTO);
+        Technician technician = mapper.toEntity(technicianRequestDTO);
+        List<String> conflicts =  collectConflicts(technician);
         if (!conflicts.isEmpty()) {
             throw new DataIntegrityViolationException("Already exists: " + String.join(" and ", conflicts));
         }
-        return mapper.toDTO(technicianRepository.save(mapper.toEntity(technicianRequestDTO)));
+        return mapper.toDTO(technicianRepository.save(technician));
     }
 
-    private List<String> collectConflicts(TechnicianRequestDTO technicianRequestDTO) {
-        return Stream.of(
-                validator.cpfExists(technicianRequestDTO) ? "CPF" : null,
-                validator.emailExists(technicianRequestDTO) ? "EMAIL" : null
-        ).filter(Objects::nonNull).toList();
+    public TechnicianResponseDTO update(Integer id, TechnicianRequestDTO technicianRequestDTO){
+        Technician technician = mapper.toEntity(technicianRequestDTO);
+        technician.setId(id);
 
+        List<String> conflicts =  collectConflicts(technician);
+        if (!conflicts.isEmpty()) {
+            throw new DataIntegrityViolationException("Already exists: " + String.join(" and ", conflicts));
+        }
+
+        return mapper.toDTO(technicianRepository.save(technician));
+    }
+
+    private List<String> collectConflicts(Technician technician) {
+        return Stream.of(
+                validator.cpfExists(technician) ? "CPF" : null,
+                validator.emailExists(technician) ? "EMAIL" : null
+        ).filter(Objects::nonNull).toList();
     };
 }
 
