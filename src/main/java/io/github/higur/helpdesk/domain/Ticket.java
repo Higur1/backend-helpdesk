@@ -5,50 +5,57 @@ import io.github.higur.helpdesk.domain.enums.Priority;
 import io.github.higur.helpdesk.domain.enums.Status;
 import jakarta.persistence.*;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-public class Ticket implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class Ticket {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate createdAt = LocalDate.now();
+    @JsonFormat(pattern = "MM/dd/yyyy")
+    private LocalDate createdAt;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "MM/dd/yyyy")
     private LocalDate closedAt;
 
-    private Priority priority;
-    private Status status;
+    private Integer priorityId;
+    private Integer statusId;
     private String title;
     private String observation;
-
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
     @ManyToOne
     @JoinColumn(name = "technician_id")
     private Technician technician;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-
     public Ticket() {
     }
 
-    public Ticket(Integer id, Status status, String title, String observation, Technician technician, Customer customer, Priority priority) {
+    public Ticket(Integer id, LocalDate createdAt, LocalDate closedAt, Status status, String title, String observation, Technician technician, Customer customer, Priority priority) {
         this.id = id;
-        this.status = status;
+        this.createdAt = createdAt;
+        this.closedAt = closedAt;
+        this.statusId = status.getCode();
         this.title = title;
         this.observation = observation;
         this.technician = technician;
         this.customer = customer;
-        this.priority = priority;
+        this.priorityId = priority.getCode();
+    }
+
+    public Ticket(LocalDate createdAt, LocalDate closedAt, Integer statusId, String title, String observation, Technician technician, Customer customer, Integer priorityId) {
+        this.createdAt = createdAt;
+        this.closedAt = closedAt;
+        this.statusId = statusId;
+        this.title = title;
+        this.observation = observation;
+        this.technician = technician;
+        this.customer = customer;
+        this.priorityId = priorityId;
     }
 
     public Integer getId() {
@@ -75,20 +82,20 @@ public class Ticket implements Serializable {
         this.closedAt = closedAt;
     }
 
-    public Priority getPriority() {
-        return priority;
+    public Integer getPriority() {
+        return priorityId;
     }
 
-    public void setPriority(Priority priority) {
-        this.priority = priority;
+    public void setPriority(Integer priority) {
+        this.priorityId = priority;
     }
 
-    public Status getStatus() {
-        return status;
+    public Integer getStatus() {
+        return statusId;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setStatus(Integer statusId) {
+        this.statusId = statusId;
     }
 
     public String getTitle() {
