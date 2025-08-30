@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.higur.helpdesk.domain.enums.Priority;
 import io.github.higur.helpdesk.domain.enums.Status;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
@@ -12,16 +13,16 @@ public class TicketRequestDTO {
     private LocalDate createdAt = LocalDate.now();
     @JsonFormat(pattern = "MM/dd/yyyy")
     private LocalDate closedAt;
-    @NotBlank(message = "Status is a required field")
+    @NotNull(message = "Status is a required field")
     private Status status;
     @NotBlank(message = "Title is a required field")
     private String title;
     private String observation;
-    @NotBlank(message = "Technician id is a required field")
+    @NotNull(message = "Technician id is a required field")
     private Integer technicianId;
-    @NotBlank(message = "Customer id is a required field")
+    @NotNull(message = "Customer id is a required field")
     private Integer customerId;
-    @NotBlank(message = "Priority is a required field")
+    @NotNull(message = "Priority is a required field")
     private Priority priority;
 
     public TicketRequestDTO() {
@@ -87,19 +88,19 @@ public class TicketRequestDTO {
         this.observation = observation;
     }
 
-    public Integer getTechnician() {
+    public Integer getTechnicianId() {
         return technicianId;
     }
 
-    public void setTechnician(Integer technicianId) {
+    public void setTechnicianId(Integer technicianId) {
         this.technicianId = technicianId;
     }
 
-    public Integer getCustomer() {
+    public Integer getCustomerId() {
         return customerId;
     }
 
-    public void setCustomer(Integer customerId) {
+    public void setCustomerId(Integer customerId) {
         this.customerId = customerId;
     }
 }
