@@ -5,6 +5,7 @@ import io.github.higur.helpdesk.domain.Technician;
 import io.github.higur.helpdesk.domain.Ticket;
 import io.github.higur.helpdesk.domain.dtos.ticketDTO.TicketRequestDTO;
 import io.github.higur.helpdesk.domain.dtos.ticketDTO.TicketResponseDTO;
+import io.github.higur.helpdesk.domain.enums.Status;
 import io.github.higur.helpdesk.domain.mapping.TicketMapper;
 import io.github.higur.helpdesk.repository.CustomerRepository;
 import io.github.higur.helpdesk.repository.TechnicianRepository;
@@ -13,6 +14,7 @@ import io.github.higur.helpdesk.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,12 +47,16 @@ public class TicketService {
 
     public TicketResponseDTO update(Integer id, TicketRequestDTO ticketRequestDTO) {
         Ticket ticketById = ticketRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Ticket Not Found"));
-        Ticket ticket = searchCustomerAndTechnician(ticketRequestDTO);
-        ticket.setId(ticketById.getId());
+        Ticket ticket = mapper.updateEntity(statusChange(ticketById, ticketRequestDTO), ticketRequestDTO);
 
         return mapper.toDto(ticketRepository.save(ticket));
     }
-
+    private Ticket statusChange(Ticket ticketById, TicketRequestDTO ticketRequestDTO){
+        if(!ticketById.getStatus().equals(ticketRequestDTO.getStatus().getCode())){
+            ticketById.setClosedAt(ticketRequestDTO.getStatus() == Status.CLOSED ? LocalDate.now() : null);
+        }
+        return ticketById;
+    }
     private Ticket searchCustomerAndTechnician(TicketRequestDTO ticketRequestDTO) {
         Customer customerById = customerRepository.findById(ticketRequestDTO.getCustomerId()).orElseThrow(() -> new ObjectNotFoundException("Customer Not Found"));
         Technician technicianById = technicianRepository.findById(ticketRequestDTO.getTechnicianId()).orElseThrow(() -> new ObjectNotFoundException("Technician Not Found"));

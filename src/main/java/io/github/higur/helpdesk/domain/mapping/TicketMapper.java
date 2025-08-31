@@ -42,5 +42,14 @@ public class TicketMapper {
                 ticketRequestDTO.getPriority().getCode()
         );
     }
+
+    public Ticket updateEntity(Ticket ticket, TicketRequestDTO ticketRequestDTO) {
+        ticket.setStatus(ticketRequestDTO.getStatus().getCode());
+        ticket.setTitle(ticketRequestDTO.getTitle());
+        ticket.setObservation(ticketRequestDTO.getObservation());
+        ticket.setPriority(ticketRequestDTO.getPriority().getCode());
+
+        return ticket;
+    }
 }
 
