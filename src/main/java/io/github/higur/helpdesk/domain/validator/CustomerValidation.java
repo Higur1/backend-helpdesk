@@ -1,7 +1,6 @@
 package io.github.higur.helpdesk.domain.validator;
 
 import io.github.higur.helpdesk.domain.Customer;
-import io.github.higur.helpdesk.domain.Technician;
 import io.github.higur.helpdesk.domain.enums.Status;
 import io.github.higur.helpdesk.repository.CustomerRepository;
 import io.github.higur.helpdesk.repository.PersonRepository;
@@ -30,6 +29,7 @@ public class CustomerValidation {
                 .filter(found -> customer.getId() == null || !customer.getId().equals(found.getId()))
                 .isPresent();
     }
+
     public boolean haveATicketOpenOrProceeding(Customer customer) {
         return customerRepository.findById(customer.getId())
                 .map(found -> found.getTickets()

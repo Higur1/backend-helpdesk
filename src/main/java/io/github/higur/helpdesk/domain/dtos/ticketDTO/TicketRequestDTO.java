@@ -3,8 +3,8 @@ package io.github.higur.helpdesk.domain.dtos.ticketDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.higur.helpdesk.domain.enums.Priority;
 import io.github.higur.helpdesk.domain.enums.Status;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 

@@ -9,6 +9,7 @@ import io.github.higur.helpdesk.repository.TechnicianRepository;
 import io.github.higur.helpdesk.service.exceptions.DataIntegrityViolationException;
 import io.github.higur.helpdesk.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +28,9 @@ public class TechnicianService {
     @Autowired
     private TechnicianValidator validator;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     public TechnicianResponseDTO find(Integer id) {
         return new TechnicianResponseDTO(
                 technicianRepository.findById(id)
@@ -43,6 +47,7 @@ public class TechnicianService {
     }
 
     public TechnicianResponseDTO save(TechnicianRequestDTO technicianRequestDTO) {
+        technicianRequestDTO.setPassword(passwordEncoder.encode(technicianRequestDTO.getPassword()));
         Technician technician = mapper.toEntity(technicianRequestDTO);
         List<String> conflicts = collectConflicts(technician);
         if (!conflicts.isEmpty()) {
@@ -52,6 +57,7 @@ public class TechnicianService {
     }
 
     public TechnicianResponseDTO update(Integer id, TechnicianRequestDTO technicianRequestDTO) {
+        technicianRequestDTO.setPassword(passwordEncoder.encode(technicianRequestDTO.getPassword()));
         Technician technician = mapper.toEntity(technicianRequestDTO);
         technician.setId(id);
 
@@ -75,7 +81,7 @@ public class TechnicianService {
         return Stream.of(
                 validator.cpfExists(technician) ? "CPF" : null,
                 validator.emailExists(technician) ? "EMAIL" : null
-        ).filter(Objects::nonNull).toList();
+        ).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     ;

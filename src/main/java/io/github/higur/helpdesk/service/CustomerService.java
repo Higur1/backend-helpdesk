@@ -9,6 +9,7 @@ import io.github.higur.helpdesk.repository.CustomerRepository;
 import io.github.higur.helpdesk.service.exceptions.DataIntegrityViolationException;
 import io.github.higur.helpdesk.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +28,9 @@ public class CustomerService {
     @Autowired
     private CustomerValidation validator;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     public CustomerResponseDTO find(Integer id) {
         return new CustomerResponseDTO(
                 customerRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Object Not Found!"))
@@ -38,6 +42,7 @@ public class CustomerService {
     }
 
     public CustomerResponseDTO save(CustomerRequestDTO customerRequestDTO) {
+        customerRequestDTO.setPassword(passwordEncoder.encode(customerRequestDTO.getPassword()));
         Customer customer = mapper.toEntity(customerRequestDTO);
         List<String> conflicts = collectConflicts(customer);
         if (!conflicts.isEmpty()) {
@@ -47,6 +52,7 @@ public class CustomerService {
     }
 
     public CustomerResponseDTO update(Integer id, CustomerRequestDTO customerRequestDTO) {
+        customerRequestDTO.setPassword(passwordEncoder.encode(customerRequestDTO.getPassword()));
         Customer customer = mapper.toEntity(customerRequestDTO);
         customer.setId(id);
 
@@ -68,6 +74,6 @@ public class CustomerService {
         return Stream.of(
                 validator.cpfExists(customer) ? "CPF" : null,
                 validator.emailExists(customer) ? "EMAIL" : null
-        ).filter(Objects::nonNull).toList();
+        ).filter(Objects::nonNull).collect(Collectors.toList());
     }
 }

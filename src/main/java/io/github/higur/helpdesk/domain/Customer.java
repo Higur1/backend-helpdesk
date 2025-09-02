@@ -2,19 +2,15 @@ package io.github.higur.helpdesk.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.higur.helpdesk.domain.enums.Profile;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 public class Customer extends Person {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     @JsonIgnore
     @OneToMany(mappedBy = "customer")
     private List<Ticket> tickets = new ArrayList<>();

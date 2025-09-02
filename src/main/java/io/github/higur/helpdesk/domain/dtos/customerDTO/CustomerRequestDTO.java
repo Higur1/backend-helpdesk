@@ -2,8 +2,8 @@ package io.github.higur.helpdesk.domain.dtos.customerDTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.higur.helpdesk.domain.enums.Profile;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;

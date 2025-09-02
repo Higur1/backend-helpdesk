@@ -3,8 +3,8 @@ package io.github.higur.helpdesk.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.higur.helpdesk.domain.enums.Priority;
 import io.github.higur.helpdesk.domain.enums.Status;
-import jakarta.persistence.*;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
 
