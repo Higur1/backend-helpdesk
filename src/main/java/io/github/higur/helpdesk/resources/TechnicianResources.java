@@ -3,12 +3,13 @@ package io.github.higur.helpdesk.resources;
 import io.github.higur.helpdesk.domain.dtos.technicianDTO.TechnicianRequestDTO;
 import io.github.higur.helpdesk.domain.dtos.technicianDTO.TechnicianResponseDTO;
 import io.github.higur.helpdesk.service.TechnicianService;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,6 +29,7 @@ public class TechnicianResources {
         return ResponseEntity.ok().body(technicianService.findAll());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping
     public ResponseEntity<TechnicianResponseDTO> save(@Valid @RequestBody TechnicianRequestDTO technicianRequestDTO) {
         TechnicianResponseDTO save = technicianService.save(technicianRequestDTO);
@@ -38,11 +40,13 @@ public class TechnicianResources {
                         .buildAndExpand(save.getId()).toUri()).body(save);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<TechnicianResponseDTO> update(@PathVariable Integer id, @Valid @RequestBody TechnicianRequestDTO technicianRequestDTO) {
         return ResponseEntity.ok().body(technicianService.update(id, technicianRequestDTO));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         technicianService.delete(id);
