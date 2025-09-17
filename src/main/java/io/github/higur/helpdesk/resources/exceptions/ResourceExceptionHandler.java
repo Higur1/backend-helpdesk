@@ -25,18 +25,6 @@ public class ResourceExceptionHandler {
                 request.getRequestURI()
         ));
     }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<StandardError> dataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new StandardError(
-                LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                "Data Violation",
-                ex.getMessage(),
-                request.getRequestURI()
-        ));
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<StandardError> validationErrors(MethodArgumentNotValidException ex, HttpServletRequest request) {
         ValidationError errors = new ValidationError(LocalDateTime.now(),
@@ -50,4 +38,29 @@ public class ResourceExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
+
+    @ExceptionHandler({
+            io.github.higur.helpdesk.service.exceptions.DataIntegrityViolationException.class,
+            org.springframework.dao.DataIntegrityViolationException.class
+    })
+    public ResponseEntity<StandardError> handleDataIntegrityViolation(
+            RuntimeException ex, HttpServletRequest request) {
+
+        String message;
+
+        if (ex instanceof io.github.higur.helpdesk.service.exceptions.DataIntegrityViolationException) {
+            message = ex.getMessage();
+        } else {
+            message = "Cannot delete technician with associated tickets";
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new StandardError(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Data Violation",
+                message,
+                request.getRequestURI()
+        ));
+    }
+
 }
