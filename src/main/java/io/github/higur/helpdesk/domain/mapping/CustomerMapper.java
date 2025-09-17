@@ -27,4 +27,10 @@ public class CustomerMapper {
                 customerRequestDTO.getProfiles()
         );
     }
+
+    public void updateFromDTO(Customer oldCustomer, CustomerRequestDTO customerRequestDTO){
+        oldCustomer.setName(customerRequestDTO.getName());
+        oldCustomer.setCpf(customerRequestDTO.getCpf());
+        oldCustomer.setEmail(customerRequestDTO.getEmail());
+    }
 }

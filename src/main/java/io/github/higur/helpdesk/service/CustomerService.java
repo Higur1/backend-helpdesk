@@ -1,8 +1,10 @@
 package io.github.higur.helpdesk.service;
 
 import io.github.higur.helpdesk.domain.Customer;
+import io.github.higur.helpdesk.domain.Technician;
 import io.github.higur.helpdesk.domain.dtos.customerDTO.CustomerRequestDTO;
 import io.github.higur.helpdesk.domain.dtos.customerDTO.CustomerResponseDTO;
+import io.github.higur.helpdesk.domain.enums.Profile;
 import io.github.higur.helpdesk.domain.mapping.CustomerMapper;
 import io.github.higur.helpdesk.domain.validator.CustomerValidation;
 import io.github.higur.helpdesk.repository.CustomerRepository;
@@ -52,15 +54,38 @@ public class CustomerService {
     }
 
     public CustomerResponseDTO update(Integer id, CustomerRequestDTO customerRequestDTO) {
-        customerRequestDTO.setPassword(passwordEncoder.encode(customerRequestDTO.getPassword()));
-        Customer customer = mapper.toEntity(customerRequestDTO);
-        customer.setId(id);
+        Customer oldCustomer = customerRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Object Not Found!"));
 
-        List<String> conflicts = collectConflicts(customer);
-        if (!conflicts.isEmpty()) {
-            throw new DataIntegrityViolationException("Already exists: " + String.join(" and ", conflicts));
+        oldCustomer.setPassword(encodePasswordIfChanged(oldCustomer, customerRequestDTO));
+        validateConflictsIfChanged(oldCustomer, customerRequestDTO);
+
+        oldCustomer.getProfiles().clear();
+        oldCustomer.getProfiles().addAll(customerRequestDTO.getProfiles().stream().map(Profile::toEnum).collect(Collectors.toSet()));
+
+        mapper.updateFromDTO(oldCustomer, customerRequestDTO);
+
+        return mapper.toDTO(customerRepository.save(oldCustomer));
+    }
+
+    private void validateConflictsIfChanged(Customer oldCustomer, CustomerRequestDTO customerRequestDTO) {
+        boolean emailChanged = !oldCustomer.getEmail().equals(customerRequestDTO.getEmail());
+        boolean cpfChanged = !oldCustomer.getCpf().equals(customerRequestDTO.getCpf());
+
+        if(emailChanged || cpfChanged){
+            List<String> conflicts = collectConflicts(mapper.toEntity(customerRequestDTO));
+            if(!conflicts.isEmpty()){
+                throw new DataIntegrityViolationException(
+                        "Already exists: "+ String.join(" and ", conflicts)
+                );
+            }
         }
-        return mapper.toDTO(customerRepository.save(customer));
+    }
+
+    private String encodePasswordIfChanged(Customer oldCustomer, CustomerRequestDTO customerRequestDTO) {
+        return oldCustomer.getPassword().equals(customerRequestDTO.getPassword())
+                ? oldCustomer.getPassword()
+                : passwordEncoder.encode(customerRequestDTO.getPassword());
     }
 
     public void delete(Integer id) {

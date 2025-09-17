@@ -3,6 +3,7 @@ package io.github.higur.helpdesk.service;
 import io.github.higur.helpdesk.domain.Technician;
 import io.github.higur.helpdesk.domain.dtos.technicianDTO.TechnicianRequestDTO;
 import io.github.higur.helpdesk.domain.dtos.technicianDTO.TechnicianResponseDTO;
+import io.github.higur.helpdesk.domain.enums.Profile;
 import io.github.higur.helpdesk.domain.mapping.TechnicianMapper;
 import io.github.higur.helpdesk.domain.validator.TechnicianValidator;
 import io.github.higur.helpdesk.repository.TechnicianRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,16 +59,18 @@ public class TechnicianService {
     }
 
     public TechnicianResponseDTO update(Integer id, TechnicianRequestDTO technicianRequestDTO) {
-        technicianRequestDTO.setPassword(passwordEncoder.encode(technicianRequestDTO.getPassword()));
-        Technician technician = mapper.toEntity(technicianRequestDTO);
-        technician.setId(id);
+        Technician oldTechnician = technicianRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Object Not Found!"));
 
-        List<String> conflicts = collectConflicts(technician);
-        if (!conflicts.isEmpty()) {
-            throw new DataIntegrityViolationException("Already exists: " + String.join(" and ", conflicts));
-        }
+        oldTechnician.setPassword(encodePasswordIfChanged(oldTechnician, technicianRequestDTO));
+        validateConflictsIfChanged(oldTechnician, technicianRequestDTO);
 
-        return mapper.toDTO(technicianRepository.save(technician));
+        oldTechnician.getProfiles().clear();
+        oldTechnician.getProfiles().addAll(technicianRequestDTO.getProfiles().stream().map(Profile::toEnum).collect(Collectors.toSet()));
+
+        mapper.updateFromDTO(oldTechnician, technicianRequestDTO);
+
+        return mapper.toDTO(technicianRepository.save(oldTechnician));
     }
 
     public void delete(Integer id) {
@@ -84,6 +88,24 @@ public class TechnicianService {
         ).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    ;
+    private String encodePasswordIfChanged(Technician oldTechnician, TechnicianRequestDTO technicianRequestDTO){
+        return oldTechnician.getPassword().equals(technicianRequestDTO.getPassword())
+                ? oldTechnician.getPassword()
+                : passwordEncoder.encode(technicianRequestDTO.getPassword());
+    }
+
+    private void validateConflictsIfChanged(Technician oldTechnician, TechnicianRequestDTO technicianRequestDTO){
+        boolean emailChanged = !oldTechnician.getEmail().equals(technicianRequestDTO.getEmail());
+        boolean cpfChanged = !oldTechnician.getCpf().equals(technicianRequestDTO.getCpf());
+
+        if(emailChanged || cpfChanged){
+            List<String> conflicts = collectConflicts(mapper.toEntity(technicianRequestDTO));
+            if(!conflicts.isEmpty()){
+                throw new DataIntegrityViolationException(
+                        "Already exists: "+ String.join(" and ", conflicts)
+                );
+            }
+        }
+    }
 }
 

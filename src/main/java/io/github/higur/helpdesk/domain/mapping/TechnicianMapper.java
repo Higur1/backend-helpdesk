@@ -27,4 +27,10 @@ public class TechnicianMapper {
                 technicianRequestDTO.getProfiles()
         );
     }
+
+    public void updateFromDTO(Technician oldTechnician, TechnicianRequestDTO technicianRequestDTO) {
+        oldTechnician.setName(technicianRequestDTO.getName());
+        oldTechnician.setCpf(technicianRequestDTO.getCpf());
+        oldTechnician.setEmail(technicianRequestDTO.getEmail());
+    }
 }
