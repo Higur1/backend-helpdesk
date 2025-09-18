@@ -93,6 +93,7 @@ public class CustomerService {
         if (validator.haveATicketOpenOrProceeding(customer)){
             throw new DataIntegrityViolationException("Is not possible delete customer with tickets OPEN or PROCEEDING");
         }
+        customerRepository.delete(customer);
     }
 
     private List<String> collectConflicts(Customer customer) {

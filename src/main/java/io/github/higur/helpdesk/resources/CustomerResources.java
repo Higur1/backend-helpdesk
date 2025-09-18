@@ -40,7 +40,7 @@ public class CustomerResources {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CustomerResponseDTO> delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
         customerService.delete(id);
         return ResponseEntity.noContent().build();
     }
