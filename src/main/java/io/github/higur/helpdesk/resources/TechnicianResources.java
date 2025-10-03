@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@PreAuthorize("hasAnyRole('ADMIN')")
 @RequestMapping(value = "/technicians")
 public class TechnicianResources {
 
@@ -29,7 +30,6 @@ public class TechnicianResources {
         return ResponseEntity.ok().body(technicianService.findAll());
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping
     public ResponseEntity<TechnicianResponseDTO> save(@Valid @RequestBody TechnicianRequestDTO technicianRequestDTO) {
         TechnicianResponseDTO save = technicianService.save(technicianRequestDTO);
@@ -40,13 +40,11 @@ public class TechnicianResources {
                         .buildAndExpand(save.getId()).toUri()).body(save);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<TechnicianResponseDTO> update(@PathVariable Integer id, @Valid @RequestBody TechnicianRequestDTO technicianRequestDTO) {
         return ResponseEntity.ok().body(technicianService.update(id, technicianRequestDTO));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         technicianService.delete(id);

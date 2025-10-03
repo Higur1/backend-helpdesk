@@ -6,6 +6,7 @@ import io.github.higur.helpdesk.service.TicketService;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -18,16 +19,19 @@ public class TicketResources {
     @Autowired
     private TicketService ticketService;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
     @GetMapping("/{id}")
     public ResponseEntity<TicketResponseDTO> find(@PathVariable Integer id) {
         return ResponseEntity.ok().body(ticketService.findById(id));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
     @GetMapping
     public ResponseEntity<List<TicketResponseDTO>> findAll() {
         return ResponseEntity.ok().body(ticketService.findAll());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN', 'CUSTOMER')")
     @PostMapping
     public ResponseEntity<TicketResponseDTO> save(@Valid @RequestBody TicketRequestDTO ticketRequestDTO) {
         TicketResponseDTO save = ticketService.save(ticketRequestDTO);
@@ -38,6 +42,7 @@ public class TicketResources {
                         .buildAndExpand(save.getId()).toUri()).body(save);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
     @PutMapping("/{id}")
     public ResponseEntity<TicketResponseDTO> update(@PathVariable Integer id, @Valid @RequestBody TicketRequestDTO ticketRequestDTO) {
         return ResponseEntity.ok().body(ticketService.update(id, ticketRequestDTO));
